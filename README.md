@@ -6,7 +6,7 @@ AI agent that ranks job applicants from an X hiring post or email inbox — deep
 > https://github.com/user-attachments/assets/9e4b1c93-a9ef-4645-91aa-2c3473d82bf9
 
 ```bash
-npx hirebuddy
+npx @sahilgupta09/hirebuddy
 ```
 
 ---
