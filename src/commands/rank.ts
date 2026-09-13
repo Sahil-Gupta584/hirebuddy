@@ -145,6 +145,9 @@ export async function rankCommand(opts: RankOpts) {
   let timeRange = "last 7 days";
   let fromDate: Date | null = null;
   let toDate: Date | null = null;
+  let emailMeta: { provider: string; timeRange: string; fromDate: Date | null; toDate: Date | null } = {
+    provider: "gmail", timeRange: "last 7 days", fromDate: null, toDate: null,
+  };
 
   if (wantEmail) {
     console.log(c.dim("── ") + c.bold(c.magenta("Step 4 · Email inbox")) + c.dim(" ──"));
@@ -208,10 +211,7 @@ export async function rankCommand(opts: RankOpts) {
     gmailToken = gtk === "" ? undefined : gtk;
     if (gmailToken) saveConfig({ gmailToken });
     if (gmailInput) saveConfig({ lastEmail: gmailInput });
-    (gmailInput as any)._provider = detected.provider;
-    (gmailInput as any)._timeRange = timeRange;
-    (gmailInput as any)._fromDate = fromDate;
-    (gmailInput as any)._toDate = toDate;
+    emailMeta = { provider: detected.provider, timeRange, fromDate, toDate };
   }
 
   if (!postUrl && !gmailInput) {
@@ -473,14 +473,14 @@ export async function rankCommand(opts: RankOpts) {
   // Fetch emails (with From/To + hiring filter like comments)
   let emailCandidates: Awaited<ReturnType<typeof fetchEmails>> = [];
   if (gmailInput) {
-    const fromDate: Date | null = (gmailInput as any)._fromDate;
-    const toDate: Date | null = (gmailInput as any)._toDate;
+    const fromDate: Date | null = emailMeta.fromDate;
+    const toDate: Date | null = emailMeta.toDate;
     let gmailQ = "hiring";
     if (fromDate && toDate) {
       const fmt = (d: Date) => `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
       gmailQ = `hiring after:${fmt(fromDate)} before:${fmt(toDate)}`;
     } else {
-      const tr = timeRangeToQuery((gmailInput as any)._timeRange || timeRange);
+      const tr = timeRangeToQuery(emailMeta.timeRange || timeRange);
       gmailQ = `hiring ${tr.gmailQ}`;
     }
     s.message(`Fetching emails from ${gmailInput} (${gmailQ})...`);
