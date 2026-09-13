@@ -49,7 +49,13 @@ function formatDDMonthYear(d: Date): string {
 function parseDateInput(s: string): Date | null {
   const t = s.trim();
   if (!t) return null;
-  // Try dd Month year, yyyy-mm-dd, dd/mm/yyyy
+  // dd/mm/yyyy
+  const dmy = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (dmy) {
+    const d = new Date(Number(dmy[3]), Number(dmy[2]) - 1, Number(dmy[1]));
+    if (!isNaN(d.getTime())) return d;
+  }
+  // yyyy-mm-dd or any other format JS can parse
   const d = new Date(t);
   if (!isNaN(d.getTime())) return d;
   return null;
@@ -168,22 +174,26 @@ export async function rankCommand(opts: RankOpts) {
     detectSpinner.stop(`${c.dim(`Provider: ${detected.provider}`)}${detected.mx.length ? ` (${detected.mx[0].slice(0, 50)})` : ""}`);
     p.note(detected.guide, c.magenta(`How to get token for ${gmailInput}`));
 
-    // From / To with dd Month year default for To = today
-    const todayStr = formatDDMonthYear(new Date());
+    // From = 1st of current month, To = today, numeric format dd/mm/yyyy
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const defaultFromStr = `${pad(1)}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`;
+    const defaultToStr = `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`;
+
     const fromRaw = await p.text({
-      message: `${c.magenta("From date?")} ${c.dim("[e.g., 01 September 2026 or 2025-09-01]")}`,
-      placeholder: "01 September 2026",
-      defaultValue: undefined,
+      message: `${c.magenta("From date?")} ${c.dim("[dd/mm/yyyy]")}`,
+      placeholder: defaultFromStr,
+      initialValue: defaultFromStr,
     });
     checkCancel(fromRaw);
     const toRaw = await p.text({
-      message: `${c.magenta("To date?")} ${c.dim(`[default: today ${todayStr}]`)}`,
-      placeholder: todayStr,
-      defaultValue: todayStr,
+      message: `${c.magenta("To date?")} ${c.dim("[dd/mm/yyyy]")}`,
+      placeholder: defaultToStr,
+      initialValue: defaultToStr,
     });
     checkCancel(toRaw);
-    const fromStr = (fromRaw as string) || "";
-    const toStr = (toRaw as string) || todayStr;
+    const fromStr = (fromRaw as string) || defaultFromStr;
+    const toStr = (toRaw as string) || defaultToStr;
     fromDate = parseDateInput(fromStr);
     toDate = parseDateInput(toStr) || new Date();
     if (fromDate && toDate) {

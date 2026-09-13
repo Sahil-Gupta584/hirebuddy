@@ -1,6 +1,6 @@
 {
   "name": "@sahilgupta09/hirebuddy",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "CLI to rank hiring applicants from X post comments vs JD — Gemini scoring, deep portfolio research, Notion output",
   "type": "module",
   "bin": {
