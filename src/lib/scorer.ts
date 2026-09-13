@@ -110,7 +110,7 @@ ${(input.portfolioPages && input.portfolioPages.length > 0
       const is429 = res.status === 429 || lastErr.includes("429") || lastErr.includes("Quota exceeded") || lastErr.includes("limit: 15") || lastErr.includes("per day");
       if (!is429) throw new Error(`Gemini API ${res.status}: ${lastErr.slice(0, 400)}`);
       if (model === "gemini-3.1-flash-lite" && lastErr.includes("generate_content_free_tier_requests") && attempt === 1) {
-        model = "gemini-2.0-flash-lite";
+        model = "gemini-3.5-flash-lite";
         continue;
       }
       if (attempt === 4) throw new Error(`Gemini API ${res.status} (model ${model}): ${lastErr.slice(0, 400)}`);
