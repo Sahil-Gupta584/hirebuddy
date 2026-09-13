@@ -66,5 +66,5 @@ export async function fetchXCommentsRapidAPI(
         entities: { expandedUrls },
       };
     })
-    .filter(c => c.text.length > 0).slice(0,10);
+    .filter(c => c.text.length > 0);
 }

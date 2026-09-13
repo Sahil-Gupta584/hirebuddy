@@ -27,7 +27,7 @@ Return JSON only: {"jd": string|null}`;
       lastTxt = await res.text();
       const isQuota = lastTxt.includes("429") || lastTxt.includes("Quota exceeded");
       if (isQuota && model === "gemini-3.1-flash-lite") {
-        model = "gemini-3.5-flash-lite";
+        model = "gemini-2.0-flash-lite";
         continue;
       }
       if (attempt < 2) await new Promise(r => setTimeout(r, 8000));
@@ -245,7 +245,7 @@ Return JSON only:
     if (res.ok) break;
     const txt = await res.text();
     if ((txt.includes("429") || txt.includes("Quota")) && model === "gemini-3.1-flash-lite") {
-      model = "gemini-3.5-flash-lite"; continue;
+      model = "gemini-2.0-flash-lite"; continue;
     }
     if (attempt === 2) return { valid: true, portfolio: null, others: candidates.slice(0, 4) }; // fallback: assume valid
     await new Promise(r => setTimeout(r, 8000));
