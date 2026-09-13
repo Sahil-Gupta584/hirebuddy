@@ -1,0 +1,46 @@
+{
+  "name": "hirebuddy",
+  "version": "1.0.6",
+  "description": "CLI to rank hiring applicants from X post comments vs JD — Gemini scoring, deep portfolio research, Notion output",
+  "type": "module",
+  "bin": {
+    "hirebuddy": "./dist/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sahil-Gupta584/hirebuddy.git"
+  },
+  "homepage": "https://github.com/Sahil-Gupta584/hirebuddy#readme",
+  "bugs": {
+    "url": "https://github.com/Sahil-Gupta584/hirebuddy/issues"
+  },
+  "scripts": {
+    "dev": "tsx src/cli.ts",
+    "build": "tsc",
+    "start": "node dist/cli.js"
+  },
+  "keywords": [
+    "cli",
+    "hiring",
+    "ai",
+    "recruitment",
+    "gemini",
+    "notion",
+    "x",
+    "twitter"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "1.8.0",
+    "commander": "15.0.0",
+    "pdf-parse": "2.4.5",
+    "picocolors": "1.1.1",
+    "playwright": "1.63.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.2",
+    "@types/pdf-parse": "1.1.5",
+    "tsx": "4.23.13",
+    "typescript": "7.0.2"
+  }
+}
